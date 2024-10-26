@@ -1,6 +1,14 @@
 const canvas = document.getElementById("sunsetCanvas");
 const ctx = canvas.getContext("2d");
 
+// Colors and gradients for day and night
+let isDay = true;
+let sunY = 0; // Initial position of the sun
+let sunColor = "#FF4500"; // Sunset sun color
+let moonColor = "#ffffff"; // Nighttime moon color
+let stars = [];
+let skyGradient; // Declare skyGradient here
+
 // Function to resize the canvas
 function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -8,8 +16,8 @@ function resizeCanvas() {
 
     // Regenerate the sky gradient with new dimensions
     skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    skyGradient.addColorStop(0, "#87CEEB"); // Daytime sky blue
-    skyGradient.addColorStop(1, "#000033"); // Nighttime dark blue
+    skyGradient.addColorStop(0, isDay ? "#87CEEB" : "#FFD700"); // Daytime sky blue or sunrise
+    skyGradient.addColorStop(1, isDay ? "#000033" : "#FF6347"); // Nighttime dark blue or sunset
 }
 
 // Call the resize function on window resize
@@ -18,15 +26,8 @@ window.addEventListener('resize', resizeCanvas);
 // Set initial size
 resizeCanvas();
 
-// Colors and gradients for day and night
-let isDay = true;
-let sunY = canvas.height - 150; // Initial position of the sun
-let skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-skyGradient.addColorStop(0, "#87CEEB"); // Daytime sky blue
-skyGradient.addColorStop(1, "#000033"); // Nighttime dark blue
-let sunColor = "#FF4500"; // Sunset sun color
-let moonColor = "#ffffff"; // Nighttime moon color
-let stars = [];
+// Initial position of the sun
+sunY = canvas.height - 150; // Adjust this to start the sun at a visible position
 
 // Generate random stars
 function generateStars() {
@@ -81,15 +82,9 @@ function animate() {
 // Toggle day and night modes on click
 canvas.addEventListener("click", () => {
     isDay = !isDay;
+    resizeCanvas(); // Resize canvas to update gradient
     if (isDay) {
-        skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        skyGradient.addColorStop(0, "#87CEEB"); // Daytime sky blue
-        skyGradient.addColorStop(1, "#000033"); // Nighttime dark blue
-    } else {
-        skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        skyGradient.addColorStop(0, "#FFD700"); // Sunrise sky color
-        skyGradient.addColorStop(1, "#FF6347"); // Sunset sky color
-        generateStars(); // Generate stars at night
+        generateStars(); // Regenerate stars only if it becomes day
     }
 });
 
