@@ -1,10 +1,22 @@
-// Add your JavaScript code here
 const canvas = document.getElementById("sunsetCanvas");
 const ctx = canvas.getContext("2d");
 
-// Set canvas size
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Function to resize the canvas
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Regenerate the sky gradient with new dimensions
+    skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    skyGradient.addColorStop(0, "#87CEEB"); // Daytime sky blue
+    skyGradient.addColorStop(1, "#000033"); // Nighttime dark blue
+}
+
+// Call the resize function on window resize
+window.addEventListener('resize', resizeCanvas);
+
+// Set initial size
+resizeCanvas();
 
 // Colors and gradients for day and night
 let isDay = true;
